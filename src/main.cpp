@@ -1,5 +1,8 @@
 #include <Arduino.h>
 
+#include <constants.hpp>
+#include <pinout.hpp>
+
 void setup() {
   // put your setup code here, to run once:
 }
