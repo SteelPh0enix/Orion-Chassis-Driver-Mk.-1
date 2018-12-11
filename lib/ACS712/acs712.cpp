@@ -9,6 +9,7 @@ ACS712::ACS712(uint8_t vout_pin, ACS712::MaxCurrent max_current, bool init) {
 bool ACS712::initialize() {
     if (initialized()) { return true; }
     if (!max_current_set()) { return false; }
+    if (!pins_set()) { return false; }
 
     pinMode(INPUT, m_vout_pin);
     m_initialized = true;

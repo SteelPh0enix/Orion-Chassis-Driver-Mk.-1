@@ -62,7 +62,8 @@ public:
     ACS712() = default;
     ACS712(uint8_t vout_pin, MaxCurrent max_current, bool init = true);
 
-    // Initializes the object and Arduino peripherals
+    // Initializes the object and Arduino peripherals.
+    // Returns false, if initialization failed.
     bool initialize();
 
     // Sets pins used by object
