@@ -1,4 +1,4 @@
-# ACS712 current sensor
+# ACS712 analog current sensor
 
 ## Description
 This class allows to easely use ACS712 current sensor.
@@ -31,7 +31,7 @@ Read the current using `read` function. It will return amount of current in
 amps or milliamps which is being measured by sensor.
 
 To set the unit, use `set_unit` function, which accepts `ACS712::Unit` enum value.
-By default, it's ACS712::Unit::Amps
+By default, it's `ACS712::Unit::Amps`
 
 ## Example
 
