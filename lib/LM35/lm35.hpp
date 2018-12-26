@@ -5,6 +5,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <stdint.h>
 
 class LM35 {
   // This constans indicates analogRead max value. Change it to 4096 when
