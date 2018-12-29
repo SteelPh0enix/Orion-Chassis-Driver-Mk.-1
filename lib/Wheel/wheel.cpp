@@ -37,4 +37,17 @@ bool Wheel::pins_set() const {
   return m_current_sensor.pins_set() && m_temperature_sensor.pins_set() &&
          m_motor.pins_set();
 }
+
+double Wheel::current() const { return m_current_sensor.read(); }
+
+double Wheel::temperature() const { return m_temperature_sensor.read(); }
+
+uint8_t Wheel::speed() const { return m_motor.speed(); }
+
+Wheel::Feedback Wheel::feedback() const {
+  return Wheel::Feedback{temperature(), current(), speed()};
+}
+
+void Wheel::set_speed(uint8_t speed) { m_motor.set_speed(speed); }
+
 }  // namespace Orion
