@@ -6,8 +6,9 @@
 
 #include <Arduino.h>
 #include <stdint.h>
+#include "../module.hpp"
 
-class LM35 {
+class LM35 : public Module {
   // This constans indicates analogRead max value. Change it to 4096 when
   // dealing with Arduino Due or similar boards, which have 12-bit ADC.
   constexpr static double ADC_MAX_VALUE{1024.};
@@ -21,13 +22,10 @@ class LM35 {
 
   // Initializes the object and Arduino peripherals.
   // Returns false, if initialization failed.
-  bool initialize();
+  virtual bool initialize() override;
 
   // Set pin for input
   void set_pins(uint8_t input_pin);
-
-  bool initialized() const;
-  bool pins_set() const;
 
   // Actual functionality
 
@@ -40,6 +38,4 @@ class LM35 {
   double voltage_to_temperature(int voltage) const;
 
   uint8_t m_input_pin{};
-  bool m_initialized{false};
-  bool m_pin_set{false};
 };

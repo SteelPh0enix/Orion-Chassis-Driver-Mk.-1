@@ -18,12 +18,8 @@ bool LM35::initialize() {
 
 void LM35::set_pins(uint8_t input_pin) {
   m_input_pin = input_pin;
-  m_pin_set = true;
+  m_pins_set = true;
 }
-
-bool LM35::initialized() const { return m_initialized; }
-
-bool LM35::pins_set() const { return m_pin_set; }
 
 double LM35::read() const {
   if (!initialized()) return 0.;

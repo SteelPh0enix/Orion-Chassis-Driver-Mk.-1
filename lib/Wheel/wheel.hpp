@@ -12,6 +12,7 @@
 namespace Orion {
 class Wheel {
  public:
+  // Structure containing full wheel feedback data
   struct Feedback {
     double temperature;
     double current;
@@ -29,6 +30,8 @@ class Wheel {
                 uint8_t current_sensor_pin);
   bool pins_set() const;
 
+  // Functions for reading the data from wheel
+  // Current in amps, temperature in celcius
   double current() const;
   double temperature() const;
   uint8_t speed() const;
