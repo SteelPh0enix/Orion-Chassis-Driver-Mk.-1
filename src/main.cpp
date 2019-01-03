@@ -1,16 +1,18 @@
 #include <Arduino.h>
-#include <button.hpp>
-#include <wheel.hpp>
+#include <joystick.hpp>
 
-Orion::Wheel test_wheel{};
+Orion::Joystick joy;
 
 void setup() {
+  joy.set_pins(A0, A1);
+  joy.initialize();
   Serial.begin(115200);
-  test_wheel.set_pins(9, A0, A1);
-  Serial.println(test_wheel.initialize() ? "Wheel initialized"
-                                         : "Wheel not initialized");
-
-  Button xd(12);
 }
 
-void loop() {}
+void loop() {
+  auto data = joy.read();
+  Serial.print("X: ");
+  Serial.print(data.x);
+  Serial.print(", Y: ");
+  Serial.println(data.y);
+}

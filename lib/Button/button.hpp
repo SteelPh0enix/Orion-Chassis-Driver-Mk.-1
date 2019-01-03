@@ -12,6 +12,7 @@ class Button : public Module {
   virtual bool initialize() override;
   void set_pins(uint8_t pin);
 
+  // Simple check for button press
   bool pressed() const;
 
   // These two functions are connected to each other.
