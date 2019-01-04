@@ -20,6 +20,7 @@ class Motor : public Module {
   void set_pins(uint8_t pwm_pin, uint8_t direction_a_pin,
                 uint8_t direction_b_pin);
 
+  // Range: -255 : 255
   void set_speed(int16_t speed);
   // Speed will always be positive. Check direction to see, which way wheel
   // rotates

@@ -20,13 +20,13 @@ class Wheel {
   };
 
   Wheel();
-  Wheel(uint8_t motor_pin, uint8_t temperature_sensor_pin,
+  Wheel(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
         uint8_t current_sensor_pin, bool init = true);
 
   bool initialize();
   bool initialized() const;
 
-  void set_pins(uint8_t motor_pin, uint8_t temperature_sensor_pin,
+  void set_pins(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
                 uint8_t current_sensor_pin);
   bool pins_set() const;
 

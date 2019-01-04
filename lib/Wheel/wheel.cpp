@@ -7,7 +7,7 @@ Wheel::Wheel() {
   m_current_sensor.set_unit(ACS712::Unit::Amps);
 }
 
-Wheel::Wheel(uint8_t motor_pin, uint8_t temperature_sensor_pin,
+Wheel::Wheel(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
              uint8_t current_sensor_pin, bool init) {
   m_current_sensor.set_max_current(ACS712::MaxCurrent::Max30A);
   m_current_sensor.set_unit(ACS712::Unit::Amps);
@@ -26,11 +26,11 @@ bool Wheel::initialized() const {
          m_motor.initialized();
 }
 
-void Wheel::set_pins(uint8_t motor_pin, uint8_t temperature_sensor_pin,
+void Wheel::set_pins(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
                      uint8_t current_sensor_pin) {
   m_current_sensor.set_pins(current_sensor_pin);
   m_temperature_sensor.set_pins(temperature_sensor_pin);
-  m_motor.set_pins(motor_pin);
+  m_motor.set_pins(motor_pin, motor_dir_a_pin, motor_dir_b_pin);
 }
 
 bool Wheel::pins_set() const {

@@ -3,7 +3,6 @@
 #include <stdint.h>
 
 #include <wheel.hpp>
-#include <pinout.hpp>
 
 namespace Orion {
 class Chassis {
@@ -12,10 +11,12 @@ class Chassis {
     void initialize();
 
     // set_speed allows to set forward/backward speed
-    void set_speed();
+    // Range: -255 : 255
+    void set_speed(int16_t speed);
 
-    
-    void set_rotation();
+    // set_rotation allows to set left/right rotation of chassis
+    // Range: -255 : 255
+    void set_rotation(int16_t value);
 
   private:
     Wheel m_left_front_wheel;
