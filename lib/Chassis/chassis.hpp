@@ -10,15 +10,12 @@ class Chassis {
   Chassis();
   void initialize();
 
-  // set_speed allows to set forward/backward speed
-  // Range: -255 : 255
-  void set_speed(int16_t speed);
+  // This controls whole chassis.
+  // Range of both values: -255 : 255
+  void drive(int16_t speed, int16_t rotation);
   int16_t speed() const;
-
-  // set_rotation allows to set left/right rotation of chassis
-  // Range: -255 : 255
-  void set_rotation(int16_t value);
   int16_t rotation() const;
+
 
  private:
   Wheel m_left_front_wheel;

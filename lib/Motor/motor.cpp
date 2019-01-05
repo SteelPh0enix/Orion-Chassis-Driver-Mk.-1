@@ -35,7 +35,8 @@ void Motor::set_speed(int16_t speed) {
   } else {
     set_direction(Direction::Forward);
   }
-
+  
+  if (speed > 255) speed = 255;
   analogWrite(m_pwm_pin, speed);
   m_speed = speed;
 }

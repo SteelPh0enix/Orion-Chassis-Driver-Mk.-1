@@ -21,11 +21,16 @@ void Chassis::initialize() {
   m_right_rear_wheel.initialize();
 }
 
-void Chassis::set_speed(int16_t speed) {}
+void Chassis::drive(int16_t speed, int16_t rotation) {
+  m_left_front_wheel.set_speed(speed + rotation);
+  m_right_front_wheel.set_speed(speed - rotation);
+  m_left_rear_wheel.set_speed(speed + rotation);
+  m_right_rear_wheel.set_speed(speed - rotation);
+
+  m_speed = speed;
+  m_rotation = rotation;
+}
 
 int16_t Chassis::speed() const { return m_speed; }
-
-void Chassis::set_rotation(int16_t value) {}
-
 int16_t Chassis::rotation() const { return m_rotation; }
 }  // namespace Orion
