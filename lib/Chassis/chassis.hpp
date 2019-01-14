@@ -7,6 +7,14 @@
 namespace Orion {
 class Chassis {
  public:
+
+  struct WheelFeedback {
+    Wheel::Feedback left_front;
+    Wheel::Feedback right_front;
+    Wheel::Feedback left_rear;
+    Wheel::Feedback right_rear;
+  };
+
   Chassis();
   void initialize();
 
@@ -16,6 +24,7 @@ class Chassis {
   int16_t speed() const;
   int16_t rotation() const;
 
+  WheelFeedback wheels_feedback() const;
 
  private:
   Wheel m_left_front_wheel;

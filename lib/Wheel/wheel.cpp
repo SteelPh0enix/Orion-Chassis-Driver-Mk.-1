@@ -11,7 +11,7 @@ Wheel::Wheel(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin
              uint8_t current_sensor_pin, bool init) {
   m_current_sensor.set_max_current(ACS712::MaxCurrent::Max30A);
   m_current_sensor.set_unit(ACS712::Unit::Amps);
-  set_pins(motor_pin, temperature_sensor_pin, current_sensor_pin);
+  set_pins(motor_pin, motor_dir_a_pin, motor_dir_b_pin, temperature_sensor_pin, current_sensor_pin);
   if (init) initialize();
 }
 

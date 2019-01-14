@@ -1,6 +1,6 @@
 #include "chassis.hpp"
 
-#include <pinout.hpp>
+#include "../../include/pinout.hpp"
 
 namespace Orion {
 Chassis::Chassis() {
@@ -33,4 +33,14 @@ void Chassis::drive(int16_t speed, int16_t rotation) {
 
 int16_t Chassis::speed() const { return m_speed; }
 int16_t Chassis::rotation() const { return m_rotation; }
+
+Chassis::WheelFeedback Chassis::wheels_feedback() const {
+  return {
+    m_left_front_wheel.feedback(),
+    m_right_front_wheel.feedback(),
+    m_left_rear_wheel.feedback(),
+    m_right_rear_wheel.feedback()
+  };
+}
+
 }  // namespace Orion
