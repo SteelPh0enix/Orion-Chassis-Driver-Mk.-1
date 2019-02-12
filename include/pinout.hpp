@@ -27,8 +27,8 @@ namespace Pinout {
     constexpr uint8_t TEMPERATURE_3 = A4;
     constexpr uint8_t TEMPERATURE_4 = A6;
 
-    constexpr uint8_t JOYSTICK_X = A14;
-    constexpr uint8_t JOYSTICK_Y = A15;
+    constexpr uint8_t JOYSTICK_X = A10;
+    constexpr uint8_t JOYSTICK_Y = A11;
     constexpr uint8_t JOYSTICK_BUTTON = 22;
     constexpr uint8_t JOYPAD_BACK_BUTTON = 23;
 }
