@@ -1,13 +1,9 @@
 #pragma once
-#include <Arduino.h>
-#include <stdint.h>
-
 #include <wheel.hpp>
 
 namespace Orion {
 class Chassis {
  public:
-
   struct WheelFeedback {
     Wheel::Feedback left_front;
     Wheel::Feedback right_front;
@@ -20,9 +16,9 @@ class Chassis {
 
   // This controls whole chassis.
   // Range of both values: -255 : 255
-  void drive(int16_t speed, int16_t rotation);
-  int16_t speed() const;
-  int16_t rotation() const;
+  void drive(int speed, int rotation);
+  int speed() const;
+  int rotation() const;
 
   WheelFeedback wheels_feedback() const;
 
@@ -32,7 +28,7 @@ class Chassis {
   Wheel m_left_rear_wheel;
   Wheel m_right_rear_wheel;
 
-  int16_t m_speed{};
-  int16_t m_rotation{};
+  int m_speed{};
+  int m_rotation{};
 };
 }  // namespace Orion

@@ -1,6 +1,6 @@
 #include "lm35.hpp"
 
-LM35::LM35(uint8_t input_pin, bool init) {
+LM35::LM35(unsigned input_pin, bool init) {
   set_pins(input_pin);
   if (init) {
     initialize();
@@ -16,7 +16,7 @@ bool LM35::initialize() {
   return true;
 }
 
-void LM35::set_pins(uint8_t input_pin) {
+void LM35::set_pins(unsigned input_pin) {
   m_input_pin = input_pin;
   m_pins_set = true;
 }

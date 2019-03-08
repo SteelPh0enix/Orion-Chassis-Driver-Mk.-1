@@ -18,14 +18,14 @@ class LM35 : public Module {
   LM35() = default;
 
   // Pin-setting and initializing c-tor
-  LM35(uint8_t input_pin, bool init = true);
+  LM35(unsigned input_pin, bool init = true);
 
   // Initializes the object and Arduino peripherals.
   // Returns false, if initialization failed.
   virtual bool initialize() override;
 
   // Set pin for input
-  void set_pins(uint8_t input_pin);
+  void set_pins(unsigned input_pin);
 
   // Actual functionality
 
@@ -37,5 +37,5 @@ class LM35 : public Module {
  private:
   double voltage_to_temperature(int voltage) const;
 
-  uint8_t m_input_pin{};
+  unsigned m_input_pin{};
 };

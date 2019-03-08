@@ -7,11 +7,13 @@ Wheel::Wheel() {
   m_current_sensor.set_unit(ACS712::Unit::Amps);
 }
 
-Wheel::Wheel(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
-             uint8_t current_sensor_pin, bool init) {
+Wheel::Wheel(unsigned motor_pin, unsigned motor_dir_a_pin,
+             unsigned motor_dir_b_pin, unsigned temperature_sensor_pin,
+             unsigned current_sensor_pin, bool init) {
   m_current_sensor.set_max_current(ACS712::MaxCurrent::Max30A);
   m_current_sensor.set_unit(ACS712::Unit::Amps);
-  set_pins(motor_pin, motor_dir_a_pin, motor_dir_b_pin, temperature_sensor_pin, current_sensor_pin);
+  set_pins(motor_pin, motor_dir_a_pin, motor_dir_b_pin, temperature_sensor_pin,
+           current_sensor_pin);
   if (init) initialize();
 }
 
@@ -26,8 +28,9 @@ bool Wheel::initialized() const {
          m_motor.initialized();
 }
 
-void Wheel::set_pins(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
-                     uint8_t current_sensor_pin) {
+void Wheel::set_pins(unsigned motor_pin, unsigned motor_dir_a_pin,
+                     unsigned motor_dir_b_pin, unsigned temperature_sensor_pin,
+                     unsigned current_sensor_pin) {
   m_current_sensor.set_pins(current_sensor_pin);
   m_temperature_sensor.set_pins(temperature_sensor_pin);
   m_motor.set_pins(motor_pin, motor_dir_a_pin, motor_dir_b_pin);
@@ -42,12 +45,12 @@ double Wheel::current() const { return m_current_sensor.read(); }
 
 double Wheel::temperature() const { return m_temperature_sensor.read(); }
 
-uint8_t Wheel::speed() const { return m_motor.speed(); }
+int Wheel::speed() const { return m_motor.speed(); }
 
 Wheel::Feedback Wheel::feedback() const {
   return Wheel::Feedback{temperature(), current(), speed()};
 }
 
-void Wheel::set_speed(uint8_t speed) { m_motor.set_speed(speed); }
+void Wheel::set_speed(int speed) { m_motor.set_speed(speed); }
 
 }  // namespace Orion

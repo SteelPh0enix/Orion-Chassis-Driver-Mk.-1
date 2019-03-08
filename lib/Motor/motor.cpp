@@ -1,7 +1,7 @@
 #include "motor.hpp"
 
-Motor::Motor(uint8_t pwm_pin, uint8_t direction_a_pin, uint8_t direction_b_pin,
-             bool init) {
+Motor::Motor(unsigned pwm_pin, unsigned direction_a_pin,
+             unsigned direction_b_pin, bool init) {
   set_pins(pwm_pin, direction_a_pin, direction_b_pin);
   if (init) initialize();
 }
@@ -17,8 +17,8 @@ bool Motor::initialize() {
   return true;
 }
 
-void Motor::set_pins(uint8_t pwm_pin, uint8_t direction_a_pin,
-                     uint8_t direction_b_pin) {
+void Motor::set_pins(unsigned pwm_pin, unsigned direction_a_pin,
+                     unsigned direction_b_pin) {
   m_pwm_pin = pwm_pin;
   m_direction_a = direction_a_pin;
   m_direction_b = direction_b_pin;
@@ -26,7 +26,7 @@ void Motor::set_pins(uint8_t pwm_pin, uint8_t direction_a_pin,
   m_pins_set = true;
 }
 
-void Motor::set_speed(int16_t speed) {
+void Motor::set_speed(int speed) {
   if (speed < 0) {
     set_direction(Direction::Backward);
     speed *= -1;
@@ -35,13 +35,13 @@ void Motor::set_speed(int16_t speed) {
   } else {
     set_direction(Direction::Forward);
   }
-  
+
   if (speed > 255) speed = 255;
   analogWrite(m_pwm_pin, speed);
   m_speed = speed;
 }
 
-int16_t Motor::speed() const { return m_speed; }
+int Motor::speed() const { return m_speed; }
 
 void Motor::set_direction(Motor::Direction direction) {
   switch (direction) {

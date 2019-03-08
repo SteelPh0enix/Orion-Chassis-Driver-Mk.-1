@@ -13,18 +13,18 @@ class Motor : public Module {
   enum class Direction { None, Forward, Backward };
 
   Motor() = default;
-  Motor(uint8_t pwm_pin, uint8_t direction_a_pin, uint8_t direction_b_pin,
+  Motor(unsigned pwm_pin, unsigned direction_a_pin, unsigned direction_b_pin,
         bool init = true);
 
   bool initialize();
-  void set_pins(uint8_t pwm_pin, uint8_t direction_a_pin,
-                uint8_t direction_b_pin);
+  void set_pins(unsigned pwm_pin, unsigned direction_a_pin,
+                unsigned direction_b_pin);
 
   // Range: -255 : 255
-  void set_speed(int16_t speed);
+  void set_speed(int speed);
   // Speed will always be positive. Check direction to see, which way wheel
   // rotates
-  int16_t speed() const;
+  int speed() const;
 
   // This is automatically called at set_speed, but i'll
   // let it be public
@@ -32,11 +32,11 @@ class Motor : public Module {
   Direction direction() const;
 
  private:
-  uint8_t m_pwm_pin{};
-  uint8_t m_direction_a{};
-  uint8_t m_direction_b{};
+  unsigned m_pwm_pin{};
+  unsigned m_direction_a{};
+  unsigned m_direction_b{};
 
-  int16_t m_speed{};
+  int m_speed{};
 
   Direction m_direction{Direction::None};
 };

@@ -1,45 +1,31 @@
 #include "button.hpp"
 
-Button::Button(uint8_t pin, bool init) {
-  set_pins(pin);
+Button::Button(unsigned button_pin, bool init, unsigned mode) {
+  set_pins(button_pin, mode);
   if (init) initialize();
 }
 
 bool Button::initialize() {
   if (!pins_set()) return false;
 
-  pinMode(m_pin, INPUT_PULLUP);
-  refresh_state();
+  pinMode(m_button_pin, m_button_input_mode);
   m_initialized = true;
   return true;
 }
 
-void Button::set_pins(uint8_t pin) {
-  m_pin = pin;
+void Button::set_pins(unsigned button_pin, unsigned mode) {
+  m_button_pin = button_pin;
+  m_button_input_mode = mode;
   m_pins_set = true;
 }
 
+void Button::set_flip_state(bool state) { m_flip_state = state; }
+
 bool Button::pressed() const {
-  if (!initialized()) {
-    return false;
-  }
-  // INPUT_PULLUP negates the readings
-  return !digitalRead(m_pin);
+  bool state = digitalRead(m_button_pin);
+  return (m_flip_state ? !state : state);
 }
 
-void Button::refresh_state() {
-  if (initialized()) {
-    m_state = !digitalRead(m_pin);
-  }
-}
-
-bool Button::state_changed() const {
-  if (!initialized()) {
-    return false;
-  }
-
-  // Because of pullup, this would end as double negation, so == is valid
-  return last_state() == digitalRead(m_pin);
-}
-
-bool Button::last_state() const { return m_state; }
+unsigned Button::pin() const { return m_button_pin; }
+unsigned Button::input_mode() const { return m_button_input_mode; }
+bool Button::flip_state() const { return m_flip_state; }

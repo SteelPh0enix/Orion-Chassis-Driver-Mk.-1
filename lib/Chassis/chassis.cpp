@@ -1,4 +1,5 @@
 #include "chassis.hpp"
+#include <Arduino.h>
 
 #include "../../include/pinout.hpp"
 
@@ -21,7 +22,7 @@ void Chassis::initialize() {
   m_right_rear_wheel.initialize();
 }
 
-void Chassis::drive(int16_t speed, int16_t rotation) {
+void Chassis::drive(int speed, int rotation) {
   m_left_front_wheel.set_speed(speed + rotation);
   m_right_front_wheel.set_speed(speed - rotation);
   m_left_rear_wheel.set_speed(speed + rotation);
@@ -31,16 +32,12 @@ void Chassis::drive(int16_t speed, int16_t rotation) {
   m_rotation = rotation;
 }
 
-int16_t Chassis::speed() const { return m_speed; }
-int16_t Chassis::rotation() const { return m_rotation; }
+int Chassis::speed() const { return m_speed; }
+int Chassis::rotation() const { return m_rotation; }
 
 Chassis::WheelFeedback Chassis::wheels_feedback() const {
-  return {
-    m_left_front_wheel.feedback(),
-    m_right_front_wheel.feedback(),
-    m_left_rear_wheel.feedback(),
-    m_right_rear_wheel.feedback()
-  };
+  return {m_left_front_wheel.feedback(), m_right_front_wheel.feedback(),
+          m_left_rear_wheel.feedback(), m_right_rear_wheel.feedback()};
 }
 
 }  // namespace Orion

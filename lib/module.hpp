@@ -28,5 +28,4 @@ class Module {
   // This constans indicates analogRead max value. Change it to 4096 when
   // dealing with Arduino Due or similar boards, which have 12-bit ADC.
   constexpr static double ADC_MAX_VALUE{1024.};
-
 };

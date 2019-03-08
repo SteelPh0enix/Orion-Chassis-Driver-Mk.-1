@@ -35,8 +35,6 @@
 */
 
 #pragma once
-#include <Arduino.h>
-#include <stdint.h>
 
 class ACS712 {
   // This constans indicates analogRead max value. Change it to 4096 when
@@ -55,14 +53,14 @@ class ACS712 {
 
   // C-tors and initialization
   ACS712() = default;
-  ACS712(uint8_t vout_pin, MaxCurrent max_current, bool init = true);
+  ACS712(unsigned vout_pin, MaxCurrent max_current, bool init = true);
 
   // Initializes the object and Arduino peripherals.
   // Returns false, if initialization failed.
   bool initialize();
 
   // Sets pins used by object
-  void set_pins(uint8_t vout_pin);
+  void set_pins(unsigned vout_pin);
 
   // Sets max current sensor can read
   void set_max_current(MaxCurrent max_current);
@@ -95,7 +93,7 @@ class ACS712 {
     return (static_cast<double>(raw_value) * 5.0) / ADC_MAX_VALUE;
   }
 
-  uint8_t m_vout_pin{};
+  unsigned m_vout_pin{};
 
   bool m_initialized{false};
   bool m_pin_set{false};

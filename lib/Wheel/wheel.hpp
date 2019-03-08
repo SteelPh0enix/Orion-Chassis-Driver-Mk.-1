@@ -16,28 +16,30 @@ class Wheel {
   struct Feedback {
     double temperature;
     double current;
-    uint8_t speed;
+    int speed;
   };
 
   Wheel();
-  Wheel(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
-        uint8_t current_sensor_pin, bool init = true);
+  Wheel(unsigned motor_pin, unsigned motor_dir_a_pin, unsigned motor_dir_b_pin,
+        unsigned temperature_sensor_pin, unsigned current_sensor_pin,
+        bool init = true);
 
   bool initialize();
   bool initialized() const;
 
-  void set_pins(uint8_t motor_pin, uint8_t motor_dir_a_pin, uint8_t motor_dir_b_pin, uint8_t temperature_sensor_pin,
-                uint8_t current_sensor_pin);
+  void set_pins(unsigned motor_pin, unsigned motor_dir_a_pin,
+                unsigned motor_dir_b_pin, unsigned temperature_sensor_pin,
+                unsigned current_sensor_pin);
   bool pins_set() const;
 
   // Functions for reading the data from wheel
   // Current in amps, temperature in celcius
   double current() const;
   double temperature() const;
-  uint8_t speed() const;
+  int speed() const;
   Feedback feedback() const;
 
-  void set_speed(uint8_t speed);
+  void set_speed(int speed);
 
  private:
   ACS712 m_current_sensor{};

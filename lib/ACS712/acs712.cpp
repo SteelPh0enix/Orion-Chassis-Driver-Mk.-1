@@ -1,6 +1,7 @@
 #include "acs712.hpp"
+#include <Arduino.h>
 
-ACS712::ACS712(uint8_t vout_pin, ACS712::MaxCurrent max_current, bool init) {
+ACS712::ACS712(unsigned vout_pin, ACS712::MaxCurrent max_current, bool init) {
   set_pins(vout_pin);
   set_max_current(max_current);
   if (init) initialize();
@@ -22,7 +23,7 @@ bool ACS712::initialize() {
   return true;
 }
 
-void ACS712::set_pins(uint8_t vout_pin) {
+void ACS712::set_pins(unsigned vout_pin) {
   m_vout_pin = vout_pin;
   m_pin_set = true;
 }
