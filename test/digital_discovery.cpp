@@ -15,7 +15,7 @@ constexpr unsigned DIGITAL_PIN_END{53};
 // Pin mode set for all the pins. Change to INPUT if you don't need pull-up
 constexpr unsigned PIN_MODE{INPUT_PULLUP};
 
-constexpr unsigned long SERIAL_BAUD_RATE{115200};
+constexpr unsigned long SERIAL_BAUD_RATE{9600};
 constexpr unsigned long SLEEP_TIME{100};
 
 // === End of configuration ===
