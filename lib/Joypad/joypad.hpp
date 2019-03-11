@@ -49,6 +49,12 @@ class Joypad : public Module {
   void invert_x(bool inv);
   void invert_y(bool inv);
 
+  void set_map_state(bool map_state);
+  bool map_state() const;
+
+  void set_x_map_values(long from_min, long from_max, long to_min, long to_max);
+  void set_y_map_values(long from_min, long from_max, long to_min, long to_max);
+
  protected:
   AnalogControl m_x_axis{}, m_y_axis{};
 

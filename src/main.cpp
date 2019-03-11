@@ -1,55 +1,67 @@
-/*
-  Simple digital, dependency-free, configurable pin discoverer.
-
-  Author: Wojciech Olech (https://gitlab.com/SteelPh0enix/)
-*/
-
 #include <Arduino.h>
+#include <chassis.hpp>
+#include <joypad.hpp>
+#include <pinout.hpp>
 
-// === Configuration ===
+void print_wheel_data(Orion::Wheel::Feedback const& feedback,
+                      const char* wheel_name) {
+  Serial.print(wheel_name);
+  Serial.print(":\nSpeed: ");
+  Serial.print(feedback.speed);
+  Serial.print("\nCurrent: ");
+  Serial.print(feedback.current);
+  Serial.print("\nTemperature: ");
+  Serial.println(feedback.temperature);
+}
 
-// Constants for scanning. Change if you'll want to shrink range of checked pins
-constexpr unsigned DIGITAL_PIN_START{2};
-constexpr unsigned DIGITAL_PIN_END{53};
+void print_chassis_data(Orion::Chassis const& chassis) {
+  Serial.print("Chassis data:\n");
+  Serial.print("Speed: ");
+  Serial.print(chassis.speed());
+  Serial.print("\nRotation: ");
+  Serial.print(chassis.rotation());
+  Serial.println('\n');
 
-// Pin mode set for all the pins. Change to INPUT if you don't need pull-up
-constexpr unsigned PIN_MODE{INPUT_PULLUP};
+  const auto feedback = chassis.wheels_feedback();
+  print_wheel_data(feedback.left_front, "left front");
+  Serial.println();
+  print_wheel_data(feedback.right_front, "right front");
+  Serial.println();
+  print_wheel_data(feedback.left_rear, "left rear");
+  Serial.println();
+  print_wheel_data(feedback.right_rear, "right rear");
+  Serial.println();
+  Serial.println();
+}
 
-constexpr unsigned long SERIAL_BAUD_RATE{115200};
-constexpr unsigned long SLEEP_TIME{100};
-
-// === End of configuration ===
-
-constexpr unsigned DIGITAL_PIN_AMOUNT{DIGITAL_PIN_END - DIGITAL_PIN_START};
-
-// Data arrays
-bool digital_states[DIGITAL_PIN_AMOUNT];
+Orion::Chassis chassis;
+Joypad joypad;
 
 void setup() {
-  // Init memory. Conditional memset to avoid initial data waterfall
-  memset(digital_states, (PIN_MODE == INPUT_PULLUP ? true : false),
-         DIGITAL_PIN_AMOUNT * sizeof(bool));
+  Serial.begin(115200);
+  Serial.println("Initializing...");
 
-  // Init serial
-  Serial.begin(SERIAL_BAUD_RATE);
+  joypad.set_pins(Pinout::JOYSTICK_X, Pinout::JOYSTICK_Y);
 
-  // Init pins
-  for (unsigned i{DIGITAL_PIN_START}; i <= DIGITAL_PIN_END; i++) {
-    pinMode(i, PIN_MODE);
-  }
+  chassis.initialize();
+  joypad.initialize();
+
+  joypad.calibrate();
+  joypad.invert_x(true);
+  joypad.invert_y(false);
+
+  Serial.print("Is joypad initialized: ");
+  Serial.println(joypad.initialized() ? "Yes" : "No");
+
+  Serial.println("Starting main loop...");
 }
 
 void loop() {
-  // Check the analog and digital states periodically every 100ms
-  for (unsigned i{0}; i < DIGITAL_PIN_AMOUNT; i++) {
-    bool state = digitalRead(i + DIGITAL_PIN_START);
-    if (state != digital_states[i]) {
-      digital_states[i] = state;
-      Serial.print("Pin #");
-      Serial.print(i + DIGITAL_PIN_START);
-      Serial.print(": digital state changed to ");
-      Serial.println(state);
-    }
-  }
-  delay(SLEEP_TIME);
+  const auto joy_data = joypad.read();
+  Serial.print(joy_data.x);
+  Serial.print(' ');
+  Serial.println(joy_data.y);
+  // chassis.drive(joy_data.x, joy_data.y);
+  // print_chassis_data(chassis);
+  delay(500);
 }

@@ -47,3 +47,20 @@ unsigned Joypad::y_pin() const { return m_y_axis.pin(); }
 
 void Joypad::invert_x(bool inv) { m_invert_x = inv; }
 void Joypad::invert_y(bool inv) { m_invert_y = inv; }
+
+void Joypad::set_map_state(bool map_state) {
+  m_x_axis.set_map_state(map_state);
+  m_y_axis.set_map_state(map_state);
+}
+
+bool Joypad::map_state() const { return m_x_axis.map_state(); }
+
+void Joypad::set_x_map_values(long from_min, long from_max, long to_min,
+                              long to_max) {
+  m_x_axis.set_map_values(from_min, from_max, to_min, to_max);
+}
+
+void Joypad::set_y_map_values(long from_min, long from_max, long to_min,
+                              long to_max) {
+  m_y_axis.set_map_values(from_min, from_max, to_min, to_max);
+}
