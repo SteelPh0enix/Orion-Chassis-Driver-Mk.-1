@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
-#include <wheel.hpp>
 #include <driving_algorithm.hpp>
+#include <wheel.hpp>
 #include "../../include/pinout.hpp"
 
 namespace Orion {
@@ -32,6 +32,30 @@ class Chassis {
     m_right_front_wheel.initialize();
     m_left_rear_wheel.initialize();
     m_right_rear_wheel.initialize();
+
+    if (self_test_state())
+      self_test();
+  }
+
+  void self_test() {
+    m_left_front_wheel.set_speed(100);
+    m_left_rear_wheel.set_speed(100);
+    m_right_front_wheel.set_speed(100);
+    m_right_rear_wheel.set_speed(100);
+
+    delay(2000);
+
+    m_left_front_wheel.set_speed(-100);
+    m_left_rear_wheel.set_speed(-100);
+    m_right_front_wheel.set_speed(-100);
+    m_right_rear_wheel.set_speed(-100);
+
+    delay(2000);
+
+    m_left_front_wheel.set_speed(0);
+    m_left_rear_wheel.set_speed(0);
+    m_right_front_wheel.set_speed(0);
+    m_right_rear_wheel.set_speed(0);
   }
 
   // This controls whole chassis.
@@ -50,6 +74,9 @@ class Chassis {
   int speed() const { return m_speed; }
   int rotation() const { return m_rotation; }
 
+  void set_self_test(bool state) { m_self_test = state; }
+  bool self_test_state() const { return m_self_test; }
+
   WheelFeedback wheels_feedback() const {
     return {m_left_front_wheel.feedback(), m_right_front_wheel.feedback(),
             m_left_rear_wheel.feedback(), m_right_rear_wheel.feedback()};
@@ -65,5 +92,7 @@ class Chassis {
   int m_rotation{};
 
   DrivingAlgorithm m_algorithm;
+
+  bool m_self_test{false};
 };
 }  // namespace Orion
