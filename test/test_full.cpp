@@ -3,6 +3,8 @@
 #include <joypad.hpp>
 #include <pinout.hpp>
 
+using Chassis = Orion::Chassis<DefaultDriveAlgorithm>;
+
 void print_wheel_data(Orion::Wheel::Feedback const& feedback,
                       const char* wheel_name) {
   Serial.print(wheel_name);
@@ -14,7 +16,7 @@ void print_wheel_data(Orion::Wheel::Feedback const& feedback,
   Serial.println(feedback.temperature);
 }
 
-void print_chassis_data(Orion::Chassis const& chassis) {
+void print_chassis_data(Chassis const& chassis) {
   Serial.print("Chassis data:\n");
   Serial.print("Speed: ");
   Serial.print(chassis.speed());
@@ -34,7 +36,7 @@ void print_chassis_data(Orion::Chassis const& chassis) {
   Serial.println();
 }
 
-Orion::Chassis chassis;
+Chassis chassis;
 Joypad joypad;
 
 void setup() {
@@ -46,6 +48,10 @@ void setup() {
   chassis.initialize();
   joypad.initialize();
 
+  joypad.calibrate();
+  joypad.invert_x(true);
+  joypad.invert_y(false);
+
   Serial.print("Is joypad initialized: ");
   Serial.println(joypad.initialized() ? "Yes" : "No");
 
@@ -54,7 +60,10 @@ void setup() {
 
 void loop() {
   const auto joy_data = joypad.read();
-  chassis.drive(joy_data.x, joy_data.y);
-  print_chassis_data(chassis);
+  Serial.print(joy_data.x);
+  Serial.print(' ');
+  Serial.println(joy_data.y);
+  // chassis.drive(joy_data.x, joy_data.y);
+  // print_chassis_data(chassis);
   delay(500);
 }
