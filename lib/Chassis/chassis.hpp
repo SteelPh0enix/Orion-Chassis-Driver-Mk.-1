@@ -83,6 +83,22 @@ class Chassis {
             m_left_rear_wheel.feedback(), m_right_rear_wheel.feedback()};
   }
 
+  int interrupt_delay() const { return m_interrupt_delay; }
+  void set_interrupt_delay(int delay) { m_interrupt_delay = delay; }
+
+  void interrupt() {
+    if (m_next_interrupt > m_last_interrupt + interrupt_delay())
+      return;
+
+    m_left_front_wheel.interrupt();
+    m_right_front_wheel.interrupt();
+    m_left_rear_wheel.interrupt();
+    m_right_rear_wheel.interrupt();
+
+    m_last_interrupt = millis();
+    m_next_interrupt = m_last_interrupt + interrupt_delay();
+  }
+
  private:
   Wheel m_left_front_wheel;
   Wheel m_right_front_wheel;
@@ -95,5 +111,9 @@ class Chassis {
   DrivingAlgorithm m_algorithm;
 
   bool m_self_test{false};
+
+  int m_interrupt_delay{100};
+  unsigned long long m_last_interrupt{};
+  unsigned long long m_next_interrupt{};
 };
 }  // namespace Orion

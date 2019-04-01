@@ -31,4 +31,6 @@ void loop() {
     input_data.clear();
     output_data.clear();
   }
+
+  chassis.interrupt();
 }

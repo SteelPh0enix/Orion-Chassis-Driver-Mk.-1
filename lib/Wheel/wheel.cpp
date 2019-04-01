@@ -68,4 +68,8 @@ void Wheel::set_speed(int speed) {
   m_motor.set_speed(speed);
 }
 
+void Wheel::interrupt() {
+  m_motor.interrupt();
+}
+
 }  // namespace Orion

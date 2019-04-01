@@ -46,6 +46,8 @@ class Wheel {
 
   void set_speed(int speed);
 
+  void interrupt();
+
  private:
   ACS712 m_current_sensor{};
   LM35 m_temperature_sensor{};
