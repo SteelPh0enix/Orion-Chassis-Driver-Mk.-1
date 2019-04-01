@@ -20,15 +20,20 @@ class Wheel {
   };
 
   Wheel();
-  Wheel(unsigned motor_pin, unsigned motor_dir_a_pin, unsigned motor_dir_b_pin,
-        unsigned temperature_sensor_pin, unsigned current_sensor_pin,
+  Wheel(unsigned motor_pin,
+        unsigned motor_dir_a_pin,
+        unsigned motor_dir_b_pin,
+        unsigned temperature_sensor_pin,
+        unsigned current_sensor_pin,
         bool init = true);
 
   bool initialize();
   bool initialized() const;
 
-  void set_pins(unsigned motor_pin, unsigned motor_dir_a_pin,
-                unsigned motor_dir_b_pin, unsigned temperature_sensor_pin,
+  void set_pins(unsigned motor_pin,
+                unsigned motor_dir_a_pin,
+                unsigned motor_dir_b_pin,
+                unsigned temperature_sensor_pin,
                 unsigned current_sensor_pin);
   bool pins_set() const;
 

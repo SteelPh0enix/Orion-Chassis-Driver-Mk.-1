@@ -4,7 +4,8 @@
 ACS712::ACS712(unsigned vout_pin, ACS712::MaxCurrent max_current, bool init) {
   set_pins(vout_pin);
   set_max_current(max_current);
-  if (init) initialize();
+  if (init)
+    initialize();
 }
 
 bool ACS712::initialize() {
@@ -33,20 +34,33 @@ void ACS712::set_max_current(MaxCurrent max_current) {
   m_max_current_set = true;
 }
 
-ACS712::MaxCurrent ACS712::max_current() const { return m_max_current; }
+ACS712::MaxCurrent ACS712::max_current() const {
+  return m_max_current;
+}
 
-void ACS712::set_unit(ACS712::Unit unit) { m_amp_unit = unit; }
+void ACS712::set_unit(ACS712::Unit unit) {
+  m_amp_unit = unit;
+}
 
-ACS712::Unit ACS712::unit() const { return m_amp_unit; }
+ACS712::Unit ACS712::unit() const {
+  return m_amp_unit;
+}
 
-bool ACS712::max_current_set() const { return m_max_current_set; }
+bool ACS712::max_current_set() const {
+  return m_max_current_set;
+}
 
-bool ACS712::initialized() const { return m_initialized; }
+bool ACS712::initialized() const {
+  return m_initialized;
+}
 
-bool ACS712::pins_set() const { return m_pin_set; }
+bool ACS712::pins_set() const {
+  return m_pin_set;
+}
 
 double ACS712::read() const {
-  if (!initialized()) return 0.;
+  if (!initialized())
+    return 0.;
 
   auto raw_value = analogRead(m_vout_pin);
   auto millivolts = raw_value_to_millivolts(raw_value);

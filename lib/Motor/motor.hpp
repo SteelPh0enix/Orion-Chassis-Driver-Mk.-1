@@ -13,11 +13,14 @@ class Motor : public Module {
   enum class Direction { None, Forward, Backward };
 
   Motor() = default;
-  Motor(unsigned pwm_pin, unsigned direction_a_pin, unsigned direction_b_pin,
+  Motor(unsigned pwm_pin,
+        unsigned direction_a_pin,
+        unsigned direction_b_pin,
         bool init = true);
 
   bool initialize();
-  void set_pins(unsigned pwm_pin, unsigned direction_a_pin,
+  void set_pins(unsigned pwm_pin,
+                unsigned direction_a_pin,
                 unsigned direction_b_pin);
 
   // Range: -255 : 255
@@ -31,12 +34,28 @@ class Motor : public Module {
   void set_direction(Direction direction);
   Direction direction() const;
 
+  bool slow_mode() const;
+  void set_slow_mode(bool mode);
+
+  int slow_mode_increment() const;
+  void set_slow_mode_increment(int inc);
+
+  // In case of slow-mode operation, call this inside interrupt.
+  void interrupt();
+
  private:
   unsigned m_pwm_pin{};
   unsigned m_direction_a{};
   unsigned m_direction_b{};
 
   int m_speed{};
+  int m_designated_speed{};
 
   Direction m_direction{Direction::None};
+
+  bool m_slow_mode{true};
+  int m_slow_mode_increment{5};
+
+  void set_speed_instant(int speed);
+  void set_speed_slow(int speed);
 };
