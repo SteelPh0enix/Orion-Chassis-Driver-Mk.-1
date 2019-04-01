@@ -71,6 +71,7 @@ class Chassis {
     m_speed = speed;
     m_rotation = rotation;
   }
+  
   int speed() const { return m_speed; }
   int rotation() const { return m_rotation; }
 

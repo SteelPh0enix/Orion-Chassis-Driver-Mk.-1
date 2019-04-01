@@ -14,7 +14,6 @@ ArduinoJson::StaticJsonDocument<OutputBufferSize> output_data;
 void setup() {
   Serial.begin(115200);
   chassis.initialize();
-  chassis.self_test();
 }
 
 void loop() {
