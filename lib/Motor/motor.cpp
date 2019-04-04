@@ -1,17 +1,13 @@
 #include "motor.hpp"
 
-Motor::Motor(unsigned pwm_pin,
-             unsigned direction_a_pin,
-             unsigned direction_b_pin,
-             bool init) {
+Motor::Motor(unsigned pwm_pin, unsigned direction_a_pin,
+             unsigned direction_b_pin, bool init) {
   set_pins(pwm_pin, direction_a_pin, direction_b_pin);
-  if (init)
-    initialize();
+  if (init) initialize();
 }
 
 bool Motor::initialize() {
-  if (!pins_set())
-    return false;
+  if (!pins_set()) return false;
 
   pinMode(m_pwm_pin, OUTPUT);
   pinMode(m_direction_a, OUTPUT);
@@ -21,8 +17,7 @@ bool Motor::initialize() {
   return true;
 }
 
-void Motor::set_pins(unsigned pwm_pin,
-                     unsigned direction_a_pin,
+void Motor::set_pins(unsigned pwm_pin, unsigned direction_a_pin,
                      unsigned direction_b_pin) {
   m_pwm_pin = pwm_pin;
   m_direction_a = direction_a_pin;
@@ -40,6 +35,8 @@ void Motor::set_speed(int speed) {
 }
 
 void Motor::set_speed_instant(int speed) {
+  m_speed = speed;
+
   if (speed < 0) {
     set_direction(Direction::Backward);
     speed *= -1;
@@ -49,19 +46,13 @@ void Motor::set_speed_instant(int speed) {
     set_direction(Direction::Forward);
   }
 
-  if (speed > 255)
-    speed = 255;
+  if (speed > 255) speed = 255;
   analogWrite(m_pwm_pin, speed);
-  m_speed = speed;
 }
 
-void Motor::set_speed_slow(int speed) {
-  m_designated_speed = speed;
-}
+void Motor::set_speed_slow(int speed) { m_designated_speed = speed; }
 
-int Motor::speed() const {
-  return m_speed;
-}
+int Motor::speed() const { return m_speed; }
 
 void Motor::set_direction(Motor::Direction direction) {
   switch (direction) {
@@ -83,32 +74,35 @@ void Motor::set_direction(Motor::Direction direction) {
   }
 }
 
-Motor::Direction Motor::direction() const {
-  return m_direction;
-}
+Motor::Direction Motor::direction() const { return m_direction; }
 
-bool Motor::slow_mode() const {
-  return m_slow_mode;
-}
+bool Motor::slow_mode() const { return m_slow_mode; }
 
-void Motor::set_slow_mode(bool mode) {
-  m_slow_mode = mode;
-}
+void Motor::set_slow_mode(bool mode) { m_slow_mode = mode; }
 
-int Motor::slow_mode_increment() const {
-  return m_slow_mode_increment;
-}
+int Motor::slow_mode_increment() const { return m_slow_mode_increment; }
 
-void Motor::set_slow_mode_increment(int inc) {
-  m_slow_mode_increment = inc;
-}
+void Motor::set_slow_mode_increment(int inc) { m_slow_mode_increment = inc; }
 
 void Motor::interrupt() {
   // Check if actual and designated speed difference is big enought to change it
-  if (abs(m_designated_speed - m_speed) < m_slow_mode_increment)
-    return;
+  if (abs(m_designated_speed - m_speed) < m_slow_mode_increment) return;
+  Serial.print("Speed set (before): ");
+  Serial.println(m_speed);
+  Serial.print("Designated speed: ");
+  Serial.println(m_designated_speed);
+  Serial.print(abs(m_designated_speed - m_speed));
+  Serial.print(" >= ");
+  Serial.println(m_slow_mode_increment);
 
-  int difference_sign{m_designated_speed - m_speed > 0 ? 1 : -1};
+  int difference_sign{m_designated_speed > 0 ? 1 : -1};
 
   set_speed_instant(m_speed + (m_slow_mode_increment * difference_sign));
+  Serial.print("Adding ");
+  Serial.print(m_slow_mode_increment * difference_sign);
+  Serial.println(" to speed");
+  Serial.print("speed: ");
+
+  Serial.println(m_speed);
+  Serial.println();
 }

@@ -33,8 +33,7 @@ class Chassis {
     m_left_rear_wheel.initialize();
     m_right_rear_wheel.initialize();
 
-    if (self_test_state())
-      self_test();
+    if (self_test_state()) self_test();
   }
 
   void self_test() {
@@ -83,20 +82,29 @@ class Chassis {
             m_left_rear_wheel.feedback(), m_right_rear_wheel.feedback()};
   }
 
-  int interrupt_delay() const { return m_interrupt_delay; }
-  void set_interrupt_delay(int delay) { m_interrupt_delay = delay; }
+  unsigned long interrupt_delay() const { return m_interrupt_delay; }
+  void set_interrupt_delay(int delay) {
+    m_interrupt_delay = delay;
+    update_interrupt_counter();
+  }
+
+  bool check_interrupt() { return millis() >= m_next_interrupt; }
 
   void interrupt() {
-    if (m_next_interrupt > m_last_interrupt + interrupt_delay())
+    if (!check_interrupt()) {
       return;
+    }
 
     m_left_front_wheel.interrupt();
     m_right_front_wheel.interrupt();
     m_left_rear_wheel.interrupt();
     m_right_rear_wheel.interrupt();
 
-    m_last_interrupt = millis();
-    m_next_interrupt = m_last_interrupt + interrupt_delay();
+    update_interrupt_counter();
+  }
+
+  void update_interrupt_counter() {
+    m_next_interrupt = millis() + interrupt_delay();
   }
 
  private:
@@ -112,8 +120,7 @@ class Chassis {
 
   bool m_self_test{false};
 
-  int m_interrupt_delay{100};
-  unsigned long long m_last_interrupt{};
-  unsigned long long m_next_interrupt{};
+  unsigned long m_interrupt_delay{100};
+  unsigned long m_next_interrupt{};
 };
 }  // namespace Orion
