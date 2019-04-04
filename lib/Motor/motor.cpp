@@ -87,22 +87,8 @@ void Motor::set_slow_mode_increment(int inc) { m_slow_mode_increment = inc; }
 void Motor::interrupt() {
   // Check if actual and designated speed difference is big enought to change it
   if (abs(m_designated_speed - m_speed) < m_slow_mode_increment) return;
-  Serial.print("Speed set (before): ");
-  Serial.println(m_speed);
-  Serial.print("Designated speed: ");
-  Serial.println(m_designated_speed);
-  Serial.print(abs(m_designated_speed - m_speed));
-  Serial.print(" >= ");
-  Serial.println(m_slow_mode_increment);
 
   int difference_sign{m_designated_speed > 0 ? 1 : -1};
 
   set_speed_instant(m_speed + (m_slow_mode_increment * difference_sign));
-  Serial.print("Adding ");
-  Serial.print(m_slow_mode_increment * difference_sign);
-  Serial.println(" to speed");
-  Serial.print("speed: ");
-
-  Serial.println(m_speed);
-  Serial.println();
 }
