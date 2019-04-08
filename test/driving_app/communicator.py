@@ -2,6 +2,12 @@ import json
 import serial
 
 
+def print_feedback(data):
+    fb = json.loads(data)
+    print("{0} - {1} - {2} - {3}\n".format(fb["0"]["SPD"],
+                                           fb["1"]["SPD"], fb["2"]["SPD"], fb["3"]["SPD"]))
+
+
 class ChassisCommunicator:
     def __init__(self, serial_port, baud_rate):
         self.busy = False
@@ -17,7 +23,7 @@ class ChassisCommunicator:
             data = json.dumps({"SPD": self.power_limit, "ROT": 0}) + '\n'
             print("Sending", data)
             self.arduino.write(data.encode())
-            print(self.arduino.readline())
+            print_feedback(self.arduino.readline())
         return True
 
     def drive_backward(self):
@@ -26,7 +32,7 @@ class ChassisCommunicator:
             data = json.dumps({"SPD": -self.power_limit, "ROT": 0}) + '\n'
             print("Sending", data)
             self.arduino.write(data.encode())
-            print(self.arduino.readline())
+            print_feedback(self.arduino.readline())
         return True
 
     def rotate_left(self):
@@ -35,7 +41,7 @@ class ChassisCommunicator:
             data = json.dumps({"SPD": 0, "ROT": -self.power_limit}) + '\n'
             print("Sending", data)
             self.arduino.write(data.encode())
-            print(self.arduino.readline())
+            print_feedback(self.arduino.readline())
         return True
 
     def rotate_right(self):
@@ -44,7 +50,7 @@ class ChassisCommunicator:
             data = json.dumps({"SPD": 0, "ROT": self.power_limit}) + '\n'
             print("Sending", data)
             self.arduino.write(data.encode())
-            print(self.arduino.readline())
+            print_feedback(self.arduino.readline())
         return True
 
     def stop(self):

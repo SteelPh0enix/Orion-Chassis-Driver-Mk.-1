@@ -8,7 +8,7 @@ struct DefaultDriveAlgorithm {
   };
 
     // Assuming speed and rotation in ranges -255 : 255
-  Output translate(int speed, int rotation) {
+  Output translate(int speed, int rotation) const {
     int drive_power =
         map(constrain(sqrt(pow(rotation, 2) + pow(speed, 2)), 0, 360), 0, 360,
             0, 250);

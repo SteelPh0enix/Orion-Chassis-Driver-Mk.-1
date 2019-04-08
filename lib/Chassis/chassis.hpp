@@ -1,12 +1,14 @@
 #pragma once
 #include <Arduino.h>
+#include <constants.hpp>
+#include <data_input.hpp>
 #include <driving_algorithm.hpp>
 #include <wheel.hpp>
 #include "../../include/pinout.hpp"
 
 namespace Orion {
 
-template <typename DrivingAlgorithm>
+template <unsigned FeedbackMaxSize = 256>
 class Chassis {
  public:
   struct WheelFeedback {
@@ -16,7 +18,7 @@ class Chassis {
     Wheel::Feedback right_rear;
   };
 
-  Chassis() {
+  Chassis(DataInput* data_input = nullptr, Stream* data_output = nullptr) {
     m_left_front_wheel.set_pins(Pinout::PWM_1, Pinout::DIR_1A, Pinout::DIR_1B,
                                 Pinout::TEMPERATURE_1, Pinout::CURRENT_1);
     m_right_front_wheel.set_pins(Pinout::PWM_2, Pinout::DIR_2A, Pinout::DIR_2B,
@@ -25,6 +27,9 @@ class Chassis {
                                Pinout::TEMPERATURE_3, Pinout::CURRENT_3);
     m_right_rear_wheel.set_pins(Pinout::PWM_4, Pinout::DIR_4A, Pinout::DIR_4B,
                                 Pinout::TEMPERATURE_4, Pinout::CURRENT_4);
+
+    set_data_input(data_input);
+    set_data_output(data_output);
   }
 
   void initialize() {
@@ -32,50 +37,34 @@ class Chassis {
     m_right_front_wheel.initialize();
     m_left_rear_wheel.initialize();
     m_right_rear_wheel.initialize();
-
-    if (self_test_state()) self_test();
-  }
-
-  void self_test() {
-    m_left_front_wheel.set_speed(100);
-    m_left_rear_wheel.set_speed(100);
-    m_right_front_wheel.set_speed(100);
-    m_right_rear_wheel.set_speed(100);
-
-    delay(2000);
-
-    m_left_front_wheel.set_speed(-100);
-    m_left_rear_wheel.set_speed(-100);
-    m_right_front_wheel.set_speed(-100);
-    m_right_rear_wheel.set_speed(-100);
-
-    delay(2000);
-
-    m_left_front_wheel.set_speed(0);
-    m_left_rear_wheel.set_speed(0);
-    m_right_front_wheel.set_speed(0);
-    m_right_rear_wheel.set_speed(0);
   }
 
   // This controls whole chassis.
   // Range of both values: -255 : 255
-  void drive(int speed, int rotation) {
-    auto wheel_data = m_algorithm.translate(speed, rotation);
+  // void drive(int speed, int rotation) {
+  //   auto wheel_data = m_algorithm.translate(speed, rotation);
 
-    m_left_front_wheel.set_speed(wheel_data.left_speed);
-    m_left_rear_wheel.set_speed(wheel_data.left_speed);
-    m_right_front_wheel.set_speed(wheel_data.right_speed);
-    m_right_rear_wheel.set_speed(wheel_data.right_speed);
+  //   m_left_front_wheel.set_speed(wheel_data.left_speed);
+  //   m_left_rear_wheel.set_speed(wheel_data.left_speed);
+  //   m_right_front_wheel.set_speed(wheel_data.right_speed);
+  //   m_right_rear_wheel.set_speed(wheel_data.right_speed);
 
-    m_speed = speed;
-    m_rotation = rotation;
+  //   m_speed = speed;
+  //   m_rotation = rotation;
+  // }
+
+  void drive() {
+    if (!m_data_input->readData()) {
+      m_data_output->println(Constant::Error::ReadingChassisData);
+      return;
+    }
+
+    ChassisDataInput wheel_data = m_data_input->data();
+    m_left_front_wheel.set_speed(wheel_data.left_front_speed);
+    m_right_front_wheel.set_speed(wheel_data.right_front_speed);
+    m_left_rear_wheel.set_speed(wheel_data.left_rear_speed);
+    m_right_rear_wheel.set_speed(wheel_data.right_rear_speed);
   }
-
-  int speed() const { return m_speed; }
-  int rotation() const { return m_rotation; }
-
-  void set_self_test(bool state) { m_self_test = state; }
-  bool self_test_state() const { return m_self_test; }
 
   WheelFeedback wheels_feedback() const {
     return {m_left_front_wheel.feedback(), m_right_front_wheel.feedback(),
@@ -101,11 +90,40 @@ class Chassis {
     m_right_rear_wheel.interrupt();
 
     update_interrupt_counter();
+    print_feedback();
   }
 
   void update_interrupt_counter() {
     m_next_interrupt = millis() + interrupt_delay();
   }
+
+  void print_feedback() {
+    ArduinoJson::StaticJsonDocument<FeedbackMaxSize> feedback_buffer;
+    auto left_front_obj =
+        feedback_buffer.createNestedObject(Constant::Json::LeftFrontWheelID);
+    populate_wheel_feedback(m_left_front_wheel, left_front_obj);
+
+    auto left_rear_obj =
+        feedback_buffer.createNestedObject(Constant::Json::LeftRearWheelID);
+    populate_wheel_feedback(m_left_rear_wheel, left_rear_obj);
+
+    auto right_front_obj =
+        feedback_buffer.createNestedObject(Constant::Json::RightFrontWheelID);
+    populate_wheel_feedback(m_right_front_wheel, right_front_obj);
+
+    auto right_rear_obj =
+        feedback_buffer.createNestedObject(Constant::Json::RightRearWheelID);
+    populate_wheel_feedback(m_right_rear_wheel, right_rear_obj);
+
+    ArduinoJson::serializeJson(feedback_buffer, *m_data_output);
+    Serial.println();
+  }
+
+  unsigned feedback_max_size() const { return FeedbackMaxSize; }
+
+  void set_data_input(DataInput* input) { m_data_input = input; }
+
+  void set_data_output(Stream* output) { m_data_output = output; }
 
  private:
   Wheel m_left_front_wheel;
@@ -113,14 +131,16 @@ class Chassis {
   Wheel m_left_rear_wheel;
   Wheel m_right_rear_wheel;
 
-  int m_speed{};
-  int m_rotation{};
-
-  DrivingAlgorithm m_algorithm;
-
-  bool m_self_test{false};
-
   unsigned long m_interrupt_delay{100};
   unsigned long m_next_interrupt{};
+
+  DataInput* m_data_input{nullptr};
+  Stream* m_data_output{nullptr};
+
+  void populate_wheel_feedback(Wheel& wheel, ArduinoJson::JsonObject& obj) {
+    obj[Constant::Json::Speed] = wheel.speed();
+    obj[Constant::Json::Current] = wheel.current();
+    obj[Constant::Json::Temperature] = wheel.temperature();
+  }
 };
 }  // namespace Orion
