@@ -18,6 +18,11 @@ class JoypadDataInput : public DataInput {
     if (initialized()) return;
     m_joypad.initialize();
     m_joypad.calibrate();
+    
+    m_joypad.set_x_map_values(-512, 512, -250, 250);
+    m_joypad.set_y_map_values(-512, 512, -250, 250);
+    m_joypad.set_map_state(true);
+
     m_initialized = true;
   }
 

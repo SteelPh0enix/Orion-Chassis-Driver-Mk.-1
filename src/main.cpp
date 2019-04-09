@@ -3,11 +3,12 @@
 #include <chassis.hpp>
 #include <driving_algorithm.hpp>
 #include <joypad_data_input.hpp>
+#include <pinout.hpp>
 
 using Chassis = Orion::Chassis<>;
 using Input = JoypadDataInput<DefaultDriveAlgorithm>;
 
-Input input(A10, A11);
+Input input(Pinout::JOYSTICK_X, Pinout::JOYSTICK_Y);
 Chassis chassis;
 
 void setup() {
@@ -21,8 +22,8 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available()) {
+  // if (Serial.available()) {
     chassis.drive();
-  }
+  // }
   chassis.interrupt();
 }

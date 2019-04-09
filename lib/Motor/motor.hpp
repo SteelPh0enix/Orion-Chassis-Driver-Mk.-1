@@ -54,7 +54,7 @@ class Motor : public Module {
   Direction m_direction{Direction::None};
 
   bool m_slow_mode{true};
-  int m_slow_mode_increment{5};
+  int m_slow_mode_increment{10};
 
   void set_speed_instant(int speed);
   void set_speed_slow(int speed);
