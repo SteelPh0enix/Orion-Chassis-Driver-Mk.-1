@@ -64,7 +64,7 @@ class Chassis {
     m_right_front_wheel.set_speed(wheel_data.right_front_speed);
     m_left_rear_wheel.set_speed(wheel_data.left_rear_speed);
     m_right_rear_wheel.set_speed(wheel_data.right_rear_speed);
-  }
+ }
 
   WheelFeedback wheels_feedback() const {
     return {m_left_front_wheel.feedback(), m_right_front_wheel.feedback(),

@@ -2,19 +2,18 @@
 #include <ArduinoJson.hpp>
 #include <chassis.hpp>
 #include <driving_algorithm.hpp>
-#include <joypad_data_input.hpp>
-#include <pinout.hpp>
+#include <json_raw_data_input.hpp>
 
 using Chassis = Orion::Chassis<>;
-using Input = JoypadDataInput<DefaultDriveAlgorithm>;
+using Input = JsonRawDataInput<>;
 
-Input input(Pinout::JOYSTICK_X, Pinout::JOYSTICK_Y);
+Input input(&Serial);
 Chassis chassis;
 
 void setup() {
   Serial.begin(115200);
 
-  input.initialize();
+  // input.initialize();
   chassis.set_data_input(&input);
   chassis.set_data_output(&Serial);
 
@@ -22,8 +21,8 @@ void setup() {
 }
 
 void loop() {
-  // if (Serial.available()) {
+  if (Serial.available()) {
     chassis.drive();
-  // }
+  }
   chassis.interrupt();
 }

@@ -14,22 +14,31 @@ class JsonRawDataInput : public DataInput {
   virtual ChassisDataInput data() const override {
     ChassisDataInput ret{};
 
-    ret.left_front_speed = m_buffer[Constant::Json::LeftFrontWheelID];
-    ret.left_rear_speed = m_buffer[Constant::Json::LeftRearWheelID];
-    ret.right_front_speed = m_buffer[Constant::Json::RightFrontWheelID];
-    ret.right_rear_speed = m_buffer[Constant::Json::RightRearWheelID];
+    ret.left_front_speed =
+        m_buffer[Constant::Json::LeftFrontWheelID][Constant::Json::InputSpeed];
+    ret.left_rear_speed =
+        m_buffer[Constant::Json::LeftRearWheelID][Constant::Json::InputSpeed];
+    ret.right_front_speed =
+        m_buffer[Constant::Json::RightFrontWheelID][Constant::Json::InputSpeed];
+    ret.right_rear_speed =
+        m_buffer[Constant::Json::RightRearWheelID][Constant::Json::InputSpeed];
 
     return ret;
   }
 
-  //{"0":123}
+  // Data format:
+  //{"0":{"PWM":123}}
 
   virtual bool readData() override {
     m_buffer.clear();
-    // char raw_buffer[BufferSize];
-    // m_input->readBytesUntil('\n', raw_buffer, BufferSize);
-    return ArduinoJson::deserializeJson(m_buffer, *m_input) ==
-           ArduinoJson::DeserializationError::Ok;
+    
+    char raw_buffer[BufferSize];
+    m_input->readBytesUntil('\n', raw_buffer, BufferSize);
+    
+    auto error = ArduinoJson::deserializeJson(m_buffer, raw_buffer);
+   // Serial.println(error.c_str());
+
+    return error == ArduinoJson::DeserializationError::Ok;
   }
 
   void set_data_input(Stream* input) { m_input = input; }
